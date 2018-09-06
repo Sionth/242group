@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 typedef struct htablerec *htable;
+typedef enum hashing_e { LINEAR_P, DOUBLE_H } hashing_t;
 
 extern void htable_free(htable h);
 extern int htable_insert(htable h,char *str);
