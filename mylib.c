@@ -1,5 +1,5 @@
-#include <stdio.h> /* for sweet sweet fprintf */
-#include <stdlib.h> /* size_t, malloc, realloc, and exit. Oh my! */
+#include <stdio.h>
+#include <stdlib.h>
 #include "mylib.h"
 #include <assert.h>
 #include <ctype.h>

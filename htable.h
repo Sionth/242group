@@ -1,8 +1,6 @@
 #ifndef HTABLE_H_
 #define HTABLE_H_
 
-/* this is the header file for our hash table */
-
 #include <stdio.h>
 
 typedef struct htablerec *htable;
