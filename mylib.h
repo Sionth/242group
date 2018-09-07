@@ -3,7 +3,8 @@
 
 #include <stddef.h>
 
-extern void *emalloc(size_t);
-extern void *ereallov(void *, size_t);
+extern void *emalloc(size_t s);
+extern void *erealloc(void *p, size_t s);
+extern int getword(char *s, int limit, FILE *stream);
 
 #endif
