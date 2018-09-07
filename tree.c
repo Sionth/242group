@@ -3,7 +3,9 @@
 #include <string.h>
 #include <stdio.h>
 
-/* note: everything is bst at this point, rbt options will be added after */
+#define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
+#define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
+
 struct tree_node *tree {
     char *key;
     tree left;
@@ -39,6 +41,24 @@ int tree_search(tree T, char *key) {
     } else if (strcmp(key, T -> key) < 0) { /* key comes before current */
         return tree_search(T -> left, key);
     } else return tree_search(T -> right, key); /* key comes after current */
+}
+
+void tree_inorder(tree T, void f(char *key)) {
+    if(T == NULL) { /*stopping case */
+        return;
+    }
+    tree_inorder(T -> left, f); /* not sure about this line */
+    f(T -> key);
+    tree_inorder(T -> right, f); /* or this one */   
+}
+
+void tree_preorder(tree T, void f(char *key)){
+    if(T == NULL) {
+        return;
+    }
+    f(T -> key);
+    tree_preorder(T -> left, f);
+    tree_preorder(T -> right, f);
 }
 
 /**
