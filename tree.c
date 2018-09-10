@@ -11,7 +11,10 @@ struct tree_node *tree {
     tree left;
     tree right;
     int frequency = 1;
+    tree_colour colour = RED;
 };
+
+/* there should be something about the RBT/BST enum here but need to figure that out */
 
 tree tree_new() {
     return NULL;
@@ -59,6 +62,15 @@ void tree_preorder(tree T, void f(char *key)){
     f(T -> key);
     tree_preorder(T -> left, f);
     tree_preorder(T -> right, f);
+}
+
+tree right_rotate(tree T) {
+}
+
+tree left_rotate(tree T) {
+}
+
+tree tree_fix(tree T) {
 }
 
 /**
