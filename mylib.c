@@ -4,6 +4,14 @@
 #include <assert.h>
 #include <ctype.h>
 
+
+
+double fill_time;
+double search_time;
+int unknown_words;
+
+
+
 void *emalloc(size_t s) {
     void *result = malloc(s);
 
@@ -14,6 +22,8 @@ void *emalloc(size_t s) {
     return result;
 }
 
+
+
 void *erealloc(void *p, size_t s) {
     void *result = realloc(p, s);
 
@@ -23,6 +33,8 @@ void *erealloc(void *p, size_t s) {
     }
     return result;
 }
+
+
 
 int getword(char *s, int limit, FILE *stream){
   int c;
@@ -49,3 +61,68 @@ int getword(char *s, int limit, FILE *stream){
   *w = '\0';
   return w - s;
 }
+
+
+void print_help(int option) {
+    if (option == 1) {
+        fprintf(stderr, "How to use program: \n\
+-T: \t Use a tree data structure (the default is a hash table). \n
+-c filename: \t Check the spelling of words in 'filename' using dictionary read from stdin. \n
+-d: \t If using a tree data structure, use double hashing as collision resolution strategy (linear probing is the defualt). \n
+-e: \t print entire contents of hash table to stderr. \n
+-o: \t If using a tree data structure, Output a representation of the tree. \n
+-p: \t Print stats about the tree instead of printing the words and thier frequencies. \n
+-r \t If using a tree data structure, make it a red-black tree. \n
+-s snapshots: \t If printing stats using the -p argument, display the given number of stats snapshots. \n
+-t tablesize: \t Use the first prime >= tablesize as the size of the hash table. \n
+-h: \t Prints this help message. \n");
+        exit(EXIT_SUCCESS);
+    }
+}
+
+
+/* Determines if the number supplied is a prime number.
+ * Parameter: c is the candidate number.
+ * Returns: 1 if c is prime 0 if not.
+ */
+int is_prime(int c) {
+    int i, prime = 1;
+    for (i = 2; i < c; i++) {
+        if (c % i== 0) {
+            prime = 0;
+        }
+    }
+    return prime;
+}
+
+
+
+/* Finds the next prime number greater or equal too the size parameter.
+ * Parameter: size is the minimum size for a new hashtable.
+ * Returns: the next prime number greater than or equal to size.
+ */
+int get_next_prime(int size) {
+    int i, candidate = size;
+    while (is_prime(candidate) == 0) {
+        candidate++;
+    }
+    return candidate;
+}
+
+
+
+/* Opens a given file for reading.
+ * Parameter: filename is the file to be opened.
+ * Returns: the opened file.
+ * EXITS if the file does not exist.
+ */
+FILE *open_file(char *filename) {
+    FILE *infile = NULL;
+    if (NULL == (infile = fopen(filename, "r"))) {
+        fprintf(stderr, "Can't find file %s\n", filename);
+        exit(EXIT_FAILURE);
+    }
+    return infile;
+}
+
+
