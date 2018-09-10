@@ -65,12 +65,28 @@ void tree_preorder(tree T, void f(char *key)){
 }
 
 tree right_rotate(tree T) {
+    tree temp = T;
+    tree root = T -> left;
+    temp -> left = root -> right;
+    root -> right = temp;
+    return root;
 }
 
 tree left_rotate(tree T) {
+    tree temp = T;
+    tree root = T -> right;
+    temp -> right = root -> left;
+    root -> left = temp;
+    return root;
 }
 
 tree tree_fix(tree T) {
+}
+
+void tree_free(tree T){
+    tree_free(T -> left);
+    tree_free(T -> right);
+    free(T);
 }
 
 /**

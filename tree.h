@@ -15,6 +15,6 @@ extern tree tree_fix(tree T);
 extern tree right_rotate(tree T);
 extern tree left_rotate(tree T);
 extern tree tree_delete(tree T, char *key); /* won't be used? */
-extern tree tree_free(tree T); /* won't be used? */
+extern tree tree_free(tree T);
 
 #endif
