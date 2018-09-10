@@ -116,6 +116,7 @@ int htable_search(htable h, char *str){
   unsigned int index = htable_word_to_int(str);
   unsigned int step = htable_step(h,index);
   index = index % h->capacity;
+
   while(col < h->capacity){
     if(h->keys[index] == NULL){
       return 0;
@@ -126,6 +127,7 @@ int htable_search(htable h, char *str){
     index = index % h->capacity;
     col++;
   }
+
   return 0;
 }
 
@@ -204,6 +206,21 @@ void htable_print_stats(htable h, FILE *stream, int num_stats) {
 }
 
 /* MAIN METHOD FOR COMPILE & TEST PURPOSE ONLY*/
-int main(void){
-  exit(EXIT_SUCCESS);
+int main(void) {
+    char word[256];
+
+    htable h = htable_new(200,LINEAR_P);
+
+
+    while(getword(word, sizeof word, stdin) != EOF){
+        htable_insert(h, word);
+    }
+
+
+    htable_print_entire_table(h, stderr);
+    htable_free(h);
+
+
+
+    return EXIT_SUCCESS;
 }
