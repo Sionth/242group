@@ -84,7 +84,54 @@ tree left_rotate(tree T) {
 }
 
 static tree tree_fix(tree T) {
-    /* consecutive red situations (according to lab book)*/
+    /* use lab book style as it is less indented in code than lecture slides */
+    if (IS_RED(T -> left) && IS_RED(T -> left -> left)) {
+        if (IS_RED(T -> right) {
+            T -> colour = RED;
+            T -> left -> colour = BLACK;
+            T -> right -> colour = BLACK;
+        } else {
+            T = right_rotate(T);
+            T -> colour = BLACK;
+            T -> right -> colour = RED;
+        }
+    } else if (IS_RED(T -> left) && IS_RED(T -> left -> right)) {
+        if (IS_RED(T -> right) {
+            T -> colour = RED;
+            T -> left -> colour = BLACK;
+            T -> right -> colour = BLACK;
+        } else {
+            T -> left = left_rotate(T -> left);
+            T = right_rotate(T);
+            T -> colour = BLACK;
+            T -> right -> colour = RED;
+        }
+    } else if (IS_RED(T -> right) && IS_RED(T -> right -> left)) {
+        if (IS_RED(T -> left)) {
+            T -> colour = RED;
+            T -> left -> colour = BLACK;
+            T -> right -> colour = BLACK;
+        } else {
+            T -> right = right_rorate(T -> right);
+            T = left_rotate(T);
+            T -> colour = BLACK;
+            T -> left = RED;
+        }
+    } else if (IS_RED(T -> right) && IS_RED(T -> right -> right)) {
+        if (IS_RED(T -> left)) {
+            T -> colour = RED;
+            T -> left = BLACK;
+            T -> right = BLACK;
+        } else {
+            T = left_rotate(T);
+            T -> colour = BLACK;
+            T -> left -> colour = RED;
+        }
+    }
+    return T;
+    
+    /* However, lecture slides are conceptually more sensible with the 3 cases */
+    /* consecutive red situations (according to lecture notes*/
         /* both children red, child of a child is red
             -> make root (cur node) red, children black */
         /* outside runs */
