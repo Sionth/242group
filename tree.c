@@ -32,63 +32,6 @@ tree tree_new(tree_t type) {
     return NULL;
 }
 
-tree tree_insert(tree T, char *key) {
-    if(T == NULL) {
-        T = emalloc(sizeof * T);
-        T->left = NULL;
-        T->right = NULL;
-        T->key = emalloc((strlen(key) + 1) * sizeof(T->key));
-        strcpy(T->key, key);
-        if (tree_type == RBT) {
-            T->colour = RED;
-        }
-        return T;  
-    } else if(strcmp(key, T -> key) < 0) {
-        T -> left = tree_insert(T -> left, key);
-    } else if (strcmp(key, T -> key) > 0) {
-        T -> right = tree_insert(T -> right, key);
-    } else {
-        T -> frequency++;
-    }
-    T = tree_fix(T);
-    return T;
-}
-
-int tree_search(tree T, char *key) {
-    if(T == NULL) { /* key not found */
-        return 0; 
-    } else if (strcmp(T->key, key) == 0) { /* key found */
-        return 1; 
-    } else if (strcmp(key, T->key) > 0) { /* key comes before current */
-        return tree_search(T->left, key);
-    } else  if (strcmp(key, T->key) < 0) { /*key comes after current */
-        return tree_search(T->right, key);
-    }
-    return 1;
-}
-
-
-
-void tree_inorder(tree T, void f(char *key)) {
-    if(T == NULL) { /*stopping case */
-        return;
-    }
-    tree_inorder(T->left, f); /* not sure about this line */
-    f(T->key);
-    tree_inorder(T->right, f); /* or this one */   
-}
-
-
-
-void tree_preorder(tree T, void f(char *key)){
-    if(T == NULL) {
-        return;
-    }
-    f(T->key);
-    tree_preorder(T->left, f);
-    tree_preorder(T->right, f);
-}
-
 
 
 static tree right_rotate(tree T) {
@@ -107,6 +50,7 @@ static tree left_rotate(tree T) {
     T->left = temp;
     return T;
 }
+
 
 
 static tree tree_fix(tree T) {
@@ -156,6 +100,67 @@ static tree tree_fix(tree T) {
     }
     return T;
 }
+
+
+tree tree_insert(tree T, char *key) {
+    if(T == NULL) {
+        T = emalloc(sizeof * T);
+        T->left = NULL;
+        T->right = NULL;
+        T->key = emalloc((strlen(key) + 1) * sizeof(T->key));
+        strcpy(T->key, key);
+        if (tree_type == RBT) {
+            T->colour = RED;
+        }
+        return T;  
+    } else if(strcmp(T->key, key) < 0) {
+        T->right = tree_insert(T->right, key);
+    } else if (strcmp(T->key, key) > 0) {
+        T->left = tree_insert(T->left, key);
+    } else {
+        T -> frequency++;
+    }
+    if (tree_type == RBT) {
+        T = tree_fix(T);
+    }
+    return T;
+}
+
+int tree_search(tree T, char *key) {
+    if (T == NULL) { /* key not found */
+        return 0; 
+    } else if (strcmp(T->key, key) == 0) { /* key found */
+        return 1; 
+    } else if (strcmp(T->key, key) > 0) { /* key comes before current */
+        return tree_search(T->left, key);
+    } else  if (strcmp(T->key, key) < 0) { /*key comes after current */
+        return tree_search(T->right, key);
+    }
+    return 1;
+}
+
+
+
+void tree_inorder(tree T, void f(char *key)) {
+    if(T == NULL) { /*stopping case */
+        return;
+    }
+    tree_inorder(T->left, f); /* not sure about this line */
+    f(T->key);
+    tree_inorder(T->right, f); /* or this one */   
+}
+
+
+
+void tree_preorder(tree T, void f(char *key)){
+    if(T == NULL) {
+        return;
+    }
+    f(T->key);
+    tree_preorder(T->left, f);
+    tree_preorder(T->right, f);
+}
+
         
 tree tree_fix_root(tree T) {
     if(IS_RED(T)) {

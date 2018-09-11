@@ -16,5 +16,7 @@ extern FILE   *open_file(char *filename);
 extern int    get_word(char *s, int limit, FILE *stream);
 extern void   insert_words_into_htable(htable h, FILE *infile);
 extern void   insert_words_into_tree(tree t, FILE *infile);
+extern void   search_tree(tree t, FILE *stream);
+extern void   search_htable(htable h, FILE *stream);
 
 #endif

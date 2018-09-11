@@ -65,15 +65,21 @@ void htable_free(htable h){
 
 
 int htable_insert(htable h, char *str) {
-    unsigned int wordVal = htable_word_to_int(str);
-    unsigned int index = wordVal % h->capacity;
-    unsigned int step = htable_step(h,wordVal);
-    int col = 0;
+    unsigned int word_value = htable_word_to_int(str);
+    unsigned int index = word_value % h->capacity; 
+    int collisions = 0;
+    unsigned int step;
 
-    while(col < h->capacity && h->keys[index] != NULL && strcmp(h->keys[index],str) != 0){
+    if (h->method == DOUBLE_H) {
+        step = htable_step(h, word_value);
+    } else {
+        step = 1;
+    }
+
+    while(collisions < h->capacity && h->keys[index] != NULL && strcmp(h->keys[index],str) != 0){
       index += step;
       index = index % h->capacity;
-      col++;
+      collisions++;
     }
 
     if(NULL == h->keys[index]){
@@ -81,7 +87,7 @@ int htable_insert(htable h, char *str) {
       strcpy(h->keys[index], str);
       h->num_keys++;
       h->freq[index]++;
-      h->stats[index] = col;
+      h->stats[index] = collisions;
       return 1;
     }else if(strcmp(h->keys[index], str) == 0){
       h->freq[index]++;
@@ -112,20 +118,26 @@ void htable_print_entire_table(htable h, FILE *stream){
 
 
 int htable_search(htable h, char *str){
-  int col = 0;
-  unsigned int index = htable_word_to_int(str);
-  unsigned int step = htable_step(h,index);
-  index = index % h->capacity;
+  int collisions = 0;
+  unsigned int word_value = htable_word_to_int(str);
+  unsigned int index = word_value % h->capacity;
+  unsigned int step;
 
-  while(col < h->capacity){
-    if(h->keys[index] == NULL){
-      return 0;
-    }else if(strcmp(h->keys[index],str)){
+  if (h->method == DOUBLE_H) {
+      step = htable_step(h,word_value);
+  } else {
+      step = 1;
+  }
+
+  while (collisions < h->capacity) {
+      if (h->keys[index] == NULL) {
+          return 0;
+    } else if (strcmp(h->keys[index],str) == 0) {
       return h->freq[index];
     }
     index += step;
     index = index % h->capacity;
-    col++;
+    collisions++;
   }
 
   return 0;
@@ -203,24 +215,4 @@ void htable_print_stats(htable h, FILE *stream, int num_stats) {
       print_stats_line(h, stream, 100 * i / num_stats);
    }
    fprintf(stream, "-----------------------------------------------------\n\n");
-}
-
-/* MAIN METHOD FOR COMPILE & TEST PURPOSE ONLY*/
-int main(void) {
-    char word[256];
-
-    htable h = htable_new(200,LINEAR_P);
-
-
-    while(get_word(word, sizeof word, stdin) != EOF){
-        htable_insert(h, word);
-    }
-
-
-    htable_print_entire_table(h, stderr);
-    htable_free(h);
-
-
-
-    return EXIT_SUCCESS;
 }

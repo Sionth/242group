@@ -165,12 +165,12 @@ void insert_words_into_tree(tree t, FILE *stream) {
 
 
 
-void search_htable(htable h) {
+void search_htable(htable h, FILE *stream) {
     clock_t start, end;
     char word[256];
     unknown_words = 0;
     start = clock();
-    while (get_word(word, sizeof word, stdin) != EOF) {  
+    while (get_word(word, sizeof word, stream) != EOF) {  
         if (htable_search(h, word) == 0) {
             fprintf(stdout, "%s\n", word);
             unknown_words++;
@@ -183,12 +183,12 @@ void search_htable(htable h) {
 
 
 
-void search_tree(tree t) {
+void search_tree(tree t, FILE *stream) {
     clock_t start, end;
     char word[256];
     unknown_words = 0;
     start = clock();
-    while (get_word(word, sizeof word, stdin) != EOF) {
+    while (get_word(word, sizeof word, stream) != EOF) {
         if (tree_search(t, word) == 0) {
             fprintf(stdout, "%s\n", word);
             unknown_words++;

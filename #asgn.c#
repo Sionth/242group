@@ -104,6 +104,9 @@ int main(int argc, char **argv) {
                 h = htable_new(table_size, LINEAR_P);
             }
             insert_words_into_htable(h, stdin);
+
+            htable
+            
             if (display_entire_contents) {
                 htable_print_entire_table(h, stderr);
             }
