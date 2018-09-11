@@ -39,7 +39,7 @@ void *erealloc(void *p, size_t s) {
 
 
 
-int getword(char *s, int limit, FILE *stream){
+static int get_word(char *s, int limit, FILE *stream){
   int c;
   char *w = s;
   assert(limit > 0 && s != NULL && stream != NULL);
@@ -73,16 +73,10 @@ int getword(char *s, int limit, FILE *stream){
 void print_help(int option) {
     if (option == 1) {
         fprintf(stderr, "How to use program: \n\
--T: \t Use a tree data structure (the default is a hash table). \n
--c filename: \t Check the spelling of words in 'filename' using dictionary read from stdin. \n
--d: \t If using a tree data structure, use double hashing as collision resolution strategy (linear probing is the defualt). \n
--e: \t print entire contents of hash table to stderr. \n
--o: \t If using a tree data structure, Output a representation of the tree. \n
--p: \t Print stats about the tree instead of printing the words and thier frequencies. \n
--r \t If using a tree data structure, make it a red-black tree. \n
--s snapshots: \t If printing stats using the -p argument, display the given number of stats snapshots. \n
--t tablesize: \t Use the first prime >= tablesize as the size of the hash table. \n
--h: \t Prints this help message. \n");
+-T: \t Use a tree data structure (the default is a hash table). \n\
+-c filename: \t Check the spelling of words in 'filename' using dictionary read from stdin. \n\
+-d: \t If using a tree data structure, use double hashing as collision resolution strategy (linear probing is the defualt). \n\
+-e: \t print entire contents of hash table to stderr. \n");
         exit(EXIT_SUCCESS);
     }
 }
@@ -110,7 +104,7 @@ int is_prime(int c) {
  * Returns: the next prime number greater than or equal to size.
  */
 int get_next_prime(int size) {
-    int i, candidate = size;
+    int candidate = size;
     while (is_prime(candidate) == 0) {
         candidate++;
     }
@@ -144,7 +138,7 @@ void insert_words_into_htable(htable h, FILE *infile) {
     clock_t start, end;
     char word[256];
     start = clock();
-    while (getword(word, sizeof word, infile) != EOF) {
+    while (get_word(word, sizeof word, infile) != EOF) {
         htable_insert(h, word);
     }
     end = clock();
@@ -162,7 +156,7 @@ void insert_words_into_tree(tree t, FILE *stream) {
     clock_t start, end;
     char word[256];
     start = clock();
-    while (get_word(word, sizeof word, infile) != EOF) {
+    while (get_word(word, sizeof word, stream) != EOF) {
         tree_insert(t, word);
     }
     end = clock();
@@ -176,7 +170,7 @@ void search_htable(htable h) {
     char word[256];
     unknown_words = 0;
     start = clock();
-    while (getword(word, sizeof word, stdin) != EOF) {  
+    while (getword(word, sizeof word, stream) != EOF) {  
         if (htable_search(t, word) == 0) {
             fprintf(stdout, "%s\n", word);
             unknown_words++;
