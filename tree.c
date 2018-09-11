@@ -20,7 +20,13 @@ struct tree_node {
     tree_colour colour;
 };
 
-
+/**
+ * creates a new tree of the specified type
+ *
+ * @param type The type of tree desired
+ *             RBT for Red/Black Tree
+ *             BST for Binary Search Tree
+ */
 tree tree_new(tree_t type) {
     tree_type = type;
     return NULL;
@@ -29,13 +35,13 @@ tree tree_new(tree_t type) {
 tree tree_insert(tree T, char *key) {
     if(T == NULL) {
         T = emalloc(sizeof * T);
-        if (tree_type == RBT) {
-            T->colour = RED;
-        }
         T->left = NULL;
         T->right = NULL;
         T->key = emalloc((strlen(key) + 1) * sizeof(T->key));
         strcpy(T->key, key);
+        if (tree_type == RBT) {
+            T->colour = RED;
+        }
         return T;  
     } else if(strcmp(key, T -> key) < 0) {
         T -> left = tree_insert(T -> left, key);
@@ -44,13 +50,10 @@ tree tree_insert(tree T, char *key) {
     } else {
         T -> frequency++;
     }
+    T = tree_fix(T);
     return T;
 }
 
-
-
-/* if RBT: also set colour[key] to red
-   if parent[key] is red: call fixup */
 int tree_search(tree T, char *key) {
     if(T == NULL) { /* key not found */
         return 0; 
@@ -58,7 +61,7 @@ int tree_search(tree T, char *key) {
         return 1; 
     } else if (strcmp(key, T->key) > 0) { /* key comes before current */
         return tree_search(T->left, key);
-    } else  if (strcmp(key, T->key) < 0) {
+    } else  if (strcmp(key, T->key) < 0) { /*key comes after current */
         return tree_search(T->right, key);
     }
     return 1;
@@ -153,27 +156,6 @@ static tree tree_fix(tree T) {
     }
     return T;
 }
-
-    
-    /* However, lecture slides are conceptually more sensible with the 3 cases */
-    /* consecutive red situations (according to lecture notes*/
-        /* both children red, child of a child is red
-            -> make root (cur node) red, children black */
-        /* outside runs */
-            /* left and left's left red, right black
-                -> right-rotate root, colour new root (left) black and new child (root) red*/
-            /* right and right's right red, left black
-                -> left-rorate root, colour new root (right) black and new child (root) red*/
-        /* inside runs */
-            /* left and left's right red, right black
-                -> left-rotate left, right-rotate root, colour new root black and new child red */
-            /* right and right's left red, left black
-                -> right-rotate right, left-rotate root, colour new root black and new child red */
-    /* also want to ensure root of all roots is black */
-        /* implementing a parent pointer could assist here, but complicates insertion etc.
-            -> test for parent pointing to NULL */
-
-
         
 tree tree_fix_root(tree T) {
     if(IS_RED(T)) {
