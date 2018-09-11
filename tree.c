@@ -1,92 +1,115 @@
 #include <stdlib.h>
 #include "tree.h"
+#include "mylib.h"
 #include <string.h>
 #include <stdio.h>
 
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
 
-struct tree_node *tree {
+typedef enum { RED, BLACK } tree_colour;
+
+static tree_t tree_type;
+
+
+struct tree_node {
     char *key;
     tree left;
     tree right;
-    int frequency = 1;
-    tree_colour colour = RED;
+    int frequency;
+    tree_colour colour;
 };
 
-/* there should be something about the RBT/BST enum here but need to figure that out */
 
-
-tree tree_new() {
+tree tree_new(tree_t type) {
+    tree_type = type;
     return NULL;
 }
 
 tree tree_insert(tree T, char *key) {
-    /* make insert return a tree to deal with NULL objects */
     if(T == NULL) {
-        return new tree_node(key);
-    } else {
-        if(strcmp(key, T -> key) < 0) {
-            T -> left = tree_insert(T -> left, key);
-        } else if (strcmp(key, T -> key) > 0) {
-            T -> right = tree_insert(T -> right, key);
-        } else {
-            T -> frequency++;
+        T = emalloc(sizeof * T);
+        if (tree_type == RBT) {
+            T->colour = RED;
         }
-        return T;
+        T->left = NULL;
+        T->right = NULL;
+        T->key = emalloc((strlen(key) + 1) * sizeof(T->key));
+        strcpy(T->key, key);
+        return T;  
+    } else if(strcmp(key, T -> key) < 0) {
+        T -> left = tree_insert(T -> left, key);
+    } else if (strcmp(key, T -> key) > 0) {
+        T -> right = tree_insert(T -> right, key);
+    } else {
+        T -> frequency++;
     }
-    /* if RBT: also set colour[key] to red
-        if parent[key] is red: call fixup */
+    return T;
 }
 
+
+
+/* if RBT: also set colour[key] to red
+   if parent[key] is red: call fixup */
 int tree_search(tree T, char *key) {
     if(T == NULL) { /* key not found */
         return 0; 
-    } else if (key == T -> key) { /* key found */
-        return T; 
-    } else if (strcmp(key, T -> key) < 0) { /* key comes before current */
-        return tree_search(T -> left, key);
-    } else return tree_search(T -> right, key); /* key comes after current */
+    } else if (strcmp(T->key, key) == 0) { /* key found */
+        return 1; 
+    } else if (strcmp(key, T->key) > 0) { /* key comes before current */
+        return tree_search(T->left, key);
+    } else  if (strcmp(key, T->key) < 0) {
+        return tree_search(T->right, key);
+    }
+    return 1;
 }
+
+
 
 void tree_inorder(tree T, void f(char *key)) {
     if(T == NULL) { /*stopping case */
         return;
     }
-    tree_inorder(T -> left, f); /* not sure about this line */
-    f(T -> key);
-    tree_inorder(T -> right, f); /* or this one */   
+    tree_inorder(T->left, f); /* not sure about this line */
+    f(T->key);
+    tree_inorder(T->right, f); /* or this one */   
 }
+
+
 
 void tree_preorder(tree T, void f(char *key)){
     if(T == NULL) {
         return;
     }
-    f(T -> key);
-    tree_preorder(T -> left, f);
-    tree_preorder(T -> right, f);
+    f(T->key);
+    tree_preorder(T->left, f);
+    tree_preorder(T->right, f);
 }
 
-tree right_rotate(tree T) {
+
+
+static tree right_rotate(tree T) {
     tree temp = T;
-    tree root = T -> left;
-    temp -> left = root -> right;
-    root -> right = temp;
-    return root;
+    T = T->left;
+    temp->left = T->right;
+    T->right = temp;
+    return T;
 }
 
-tree left_rotate(tree T) {
+
+static tree left_rotate(tree T) {
     tree temp = T;
-    tree root = T -> right;
-    temp -> right = root -> left;
-    root -> left = temp;
-    return root;
+    T = T->right;
+    temp->right = T->left;
+    T->left = temp;
+    return T;
 }
+
 
 static tree tree_fix(tree T) {
     /* use lab book style as it is less indented in code than lecture slides */
     if (IS_RED(T -> left) && IS_RED(T -> left -> left)) {
-        if (IS_RED(T -> right) {
+        if (IS_RED(T -> right)) {
             T -> colour = RED;
             T -> left -> colour = BLACK;
             T -> right -> colour = BLACK;
@@ -96,7 +119,7 @@ static tree tree_fix(tree T) {
             T -> right -> colour = RED;
         }
     } else if (IS_RED(T -> left) && IS_RED(T -> left -> right)) {
-        if (IS_RED(T -> right) {
+        if (IS_RED(T -> right)) {
             T -> colour = RED;
             T -> left -> colour = BLACK;
             T -> right -> colour = BLACK;
@@ -106,29 +129,31 @@ static tree tree_fix(tree T) {
             T -> colour = BLACK;
             T -> right -> colour = RED;
         }
-    } else if (IS_RED(T -> right) && IS_RED(T -> right -> left)) {
-        if (IS_RED(T -> left)) {
-            T -> colour = RED;
-            T -> left -> colour = BLACK;
-            T -> right -> colour = BLACK;
+    } else if (IS_RED(T->right) && IS_RED(T -> right -> left)) {
+        if (IS_RED(T->left)) {
+            T->colour = RED;
+            T->left->colour = BLACK;
+            T->right->colour = BLACK;
         } else {
-            T -> right = right_rorate(T -> right);
+            T->right = right_rotate(T->right);
             T = left_rotate(T);
-            T -> colour = BLACK;
-            T -> left = RED;
+            T->colour = BLACK;
+            T->left->colour = RED;
         }
     } else if (IS_RED(T -> right) && IS_RED(T -> right -> right)) {
         if (IS_RED(T -> left)) {
-            T -> colour = RED;
-            T -> left = BLACK;
-            T -> right = BLACK;
+            T->colour = RED;
+            T->left->colour = BLACK;
+            T->right->colour = BLACK;
         } else {
             T = left_rotate(T);
-            T -> colour = BLACK;
-            T -> left -> colour = RED;
+            T->colour = BLACK;
+            T->left->colour = RED;
         }
     }
     return T;
+}
+
     
     /* However, lecture slides are conceptually more sensible with the 3 cases */
     /* consecutive red situations (according to lecture notes*/
@@ -147,21 +172,24 @@ static tree tree_fix(tree T) {
     /* also want to ensure root of all roots is black */
         /* implementing a parent pointer could assist here, but complicates insertion etc.
             -> test for parent pointing to NULL */
-}
 
+
+        
 tree tree_fix_root(tree T) {
-    if(IS_RED(T))
-    {
+    if(IS_RED(T)) {
         T -> colour = BLACK;
     }
     return T;
 }
+
+ 
 void tree_free(tree T) {
     tree_free(T -> left);
     tree_free(T -> right);
     free(T -> key);
     free(T);
 }
+
 
 /**
  * Output a DOT description of this tree to the given output stream.
@@ -180,6 +208,7 @@ void tree_output_dot(tree t, FILE *out) {
    tree_output_dot_aux(t, out);
    fprintf(out, "}\n");
 }
+
 
 /**
  * Traverses the tree writing a DOT description about connections, and
