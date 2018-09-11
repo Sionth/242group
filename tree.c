@@ -149,6 +149,13 @@ static tree tree_fix(tree T) {
             -> test for parent pointing to NULL */
 }
 
+tree tree_fix_root(tree T) {
+    if(IS_RED(T))
+    {
+        T -> colour = BLACK;
+    }
+    return T;
+}
 void tree_free(tree T) {
     tree_free(T -> left);
     tree_free(T -> right);
