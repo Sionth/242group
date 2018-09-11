@@ -39,7 +39,7 @@ void *erealloc(void *p, size_t s) {
 
 
 
-static int get_word(char *s, int limit, FILE *stream){
+int get_word(char *s, int limit, FILE *stream){
   int c;
   char *w = s;
   assert(limit > 0 && s != NULL && stream != NULL);
@@ -170,8 +170,8 @@ void search_htable(htable h) {
     char word[256];
     unknown_words = 0;
     start = clock();
-    while (getword(word, sizeof word, stream) != EOF) {  
-        if (htable_search(t, word) == 0) {
+    while (get_word(word, sizeof word, stdin) != EOF) {  
+        if (htable_search(h, word) == 0) {
             fprintf(stdout, "%s\n", word);
             unknown_words++;
         }
@@ -188,7 +188,7 @@ void search_tree(tree t) {
     char word[256];
     unknown_words = 0;
     start = clock();
-    while (getword(word, sizeof word, stdin) != EOF) {
+    while (get_word(word, sizeof word, stdin) != EOF) {
         if (tree_search(t, word) == 0) {
             fprintf(stdout, "%s\n", word);
             unknown_words++;
@@ -200,7 +200,8 @@ void search_tree(tree t) {
 
 
 
-/* Prints the time taken to search and fill the data structure and how many
+/**
+ *Prints the time taken to search and fill the data structure and how many
  * words were not found in the dictionary.
  * Parameter: print_option is set to 1 if the user wants to see basic stats.
  */

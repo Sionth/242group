@@ -10,9 +10,7 @@
 int main(int argc, char **argv) {
 
     FILE *infile; /* The dictionary file for filling the data structure. */
-    FILE *document; /* The document that we wish to spellcheck. */
-    char *filename; /* The name of the dictionary file */
-    char *document_name; /* The name of the docuemnt file */
+    char *filename = NULL; /* The name of the dictionary file */
     int table_size = 113; /* Default size of hashtable */
     const char *optstring = "Tc:deoprs:t:h";
     char option;
@@ -41,7 +39,6 @@ int main(int argc, char **argv) {
                     break;
                 case 'c' :
                     spell_check = 1;
-                    document_name = optarg;
                     break;
                 case 'd' :
                     collision_strategy = 1;
@@ -96,7 +93,6 @@ int main(int argc, char **argv) {
 
         print_help(help);
         infile = open_file(filename);
-        document = open_file(document_name);
     
         /* Tree */
         if (data_stucture) {
