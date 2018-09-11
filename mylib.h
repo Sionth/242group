@@ -10,5 +10,7 @@ extern void print_help(int option);
 extern int is_prime(int c);
 extern int get_next_prime(int size);
 extern FILE *open_file(char *filename);
+extern void insert_words_into_htable(htable h, FILE *infile);
+extern void insert_words_into_tree(tree t, FILE *infile);
 
 #endif
