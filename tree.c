@@ -10,12 +10,12 @@ struct tree_node *tree {
     char *key;
     tree left;
     tree right;
-    /* tree parent; /* may not need */
     int frequency = 1;
     tree_colour colour = RED;
 };
 
 /* there should be something about the RBT/BST enum here but need to figure that out */
+
 
 tree tree_new() {
     return NULL;
@@ -28,7 +28,7 @@ tree tree_insert(tree T, char *key) {
     } else {
         if(strcmp(key, T -> key) < 0) {
             T -> left = tree_insert(T -> left, key);
-        } else if (strcmp(key, T -> key) >0) {
+        } else if (strcmp(key, T -> key) > 0) {
             T -> right = tree_insert(T -> right, key);
         } else {
             T -> frequency++;
@@ -102,9 +102,10 @@ static tree tree_fix(tree T) {
             -> test for parent pointing to NULL */
 }
 
-void tree_free(tree T){
+void tree_free(tree T) {
     tree_free(T -> left);
     tree_free(T -> right);
+    free(T -> key);
     free(T);
 }
 
