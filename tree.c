@@ -10,6 +10,7 @@ struct tree_node *tree {
     char *key;
     tree left;
     tree right;
+    /* tree parent; /* may not need */
     int frequency = 1;
     tree_colour colour = RED;
 };
@@ -34,6 +35,8 @@ tree tree_insert(tree T, char *key) {
         }
         return T;
     }
+    /* if RBT: also set colour[key] to red
+        if parent[key] is red: call fixup */
 }
 
 int tree_search(tree T, char *key) {
@@ -80,7 +83,23 @@ tree left_rotate(tree T) {
     return root;
 }
 
-tree tree_fix(tree T) {
+static tree tree_fix(tree T) {
+    /* consecutive red situations (according to lab book)*/
+        /* both children red, child of a child is red
+            -> make root (cur node) red, children black */
+        /* outside runs */
+            /* left and left's left red, right black
+                -> right-rotate root, colour new root (left) black and new child (root) red*/
+            /* right and right's right red, left black
+                -> left-rorate root, colour new root (right) black and new child (root) red*/
+        /* inside runs */
+            /* left and left's right red, right black
+                -> left-rotate left, right-rotate root, colour new root black and new child red */
+            /* right and right's left red, left black
+                -> right-rotate right, left-rotate root, colour new root black and new child red */
+    /* also want to ensure root of all roots is black */
+        /* implementing a parent pointer could assist here, but complicates insertion etc.
+            -> test for parent pointing to NULL */
 }
 
 void tree_free(tree T){

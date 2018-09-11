@@ -11,7 +11,7 @@ extern tree tree_insert(tree T, char *key);
 extern int tree_search(tree T, char *key);
 extern void tree_inorder(tree T, void f(char *key));
 extern void tree_preorder(tree T, void f(char *key));
-extern tree tree_fix(tree T);
+extern static tree tree_fix(tree T);
 extern tree right_rotate(tree T);
 extern tree left_rotate(tree T);
 extern tree tree_delete(tree T, char *key); /* won't be used? */
