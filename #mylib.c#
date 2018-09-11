@@ -8,7 +8,6 @@
 #include <ctype.h>
 
 
-
 double fill_time;
 double search_time;
 int unknown_words;
