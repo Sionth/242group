@@ -212,7 +212,7 @@ int main(void) {
     htable h = htable_new(200,LINEAR_P);
 
 
-    while(getword(word, sizeof word, stdin) != EOF){
+    while(get_word(word, sizeof word, stdin) != EOF){
         htable_insert(h, word);
     }
 
