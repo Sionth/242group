@@ -72,6 +72,7 @@ int main(int argc, char **argv) {
                     table_size = atoi(optarg);
                     break;
                 default:
+                    help = 1;
                     break;
             }
         }                                                     

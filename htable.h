@@ -1,3 +1,11 @@
+/**
+ * Header file for hash table implementation.
+ * 13/9/18.
+ * @author Kelson Sadlier
+ * @author Quinn Thorsnes
+ * @author Callan Taylor
+ *
+ */
 #ifndef HTABLE_H_
 #define HTABLE_H_
 

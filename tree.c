@@ -1,17 +1,39 @@
+/**
+ * A modular implementation of a binary tree data structure.
+ * 13/09/18.
+ * @author Kelson Sadlier
+ * @author Quinn Thorsnes
+ * @author Callan Taylor
+ *
+ */
 #include <stdlib.h>
 #include "tree.h"
 #include "mylib.h"
 #include <string.h>
 #include <stdio.h>
 
+
+/**
+ * Macros for checking the 'colour' field of a rbt node.
+ *
+ * @param x The given node.
+ */
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
 
+
 typedef enum { RED, BLACK } tree_colour;
 
+
+/**
+ * Data field to hold the type of binary tree being used. Either an rbt or bst.
+ */
 static tree_t tree_type;
 
 
+/**
+ * tree_node struct is the blueprint for creating an instance of a binary tree.
+ */
 struct tree_node {
     char *key;
     tree left;
@@ -20,8 +42,9 @@ struct tree_node {
     tree_colour colour;
 };
 
+
 /**
- * creates a new tree of the specified type
+ * creates a new binary tree of the specified type
  *
  * @param type The type of tree desired
  *             RBT for Red/Black Tree
@@ -33,7 +56,13 @@ tree tree_new(tree_t type) {
 }
 
 
-
+/**
+ * Performs a right rotation of the nodes at a particular position in an rbt.
+ *
+ * @param T The node at which we wish the rotation to take place.
+ *
+ * @return T the updated rbt.
+ */
 static tree right_rotate(tree T) {
     tree temp = T;
     T = T->left;
@@ -43,6 +72,13 @@ static tree right_rotate(tree T) {
 }
 
 
+/**
+ * Performs a left rotation of the nodes at a particular position in an rbt.
+ *
+ * @param T The node at which we wish the rotation to take place.
+ *
+ * @return T the updated rbt.
+ */
 static tree left_rotate(tree T) {
     tree temp = T;
     T = T->right;
@@ -52,7 +88,15 @@ static tree left_rotate(tree T) {
 }
 
 
-
+/**
+ * Called after each insertion into an rbt, tree_fix updates the colours and
+ * performs necessary rotaion to ensure the tree complies with the
+ * specifications of an rbt.
+ *
+ * @param T a node in an rbt.
+ *
+ * @return T the updates node in the rbt.
+ */
 static tree tree_fix(tree T) {
     if (IS_RED(T -> left) && IS_RED(T -> left -> left)) {
         if (IS_RED(T -> right)) {
@@ -101,7 +145,16 @@ static tree tree_fix(tree T) {
 }
 
 
-
+/**
+ * Inserts a string into the data structure by creating and allocating a new
+ * node and copying the string into its key data field. If the tree is a rbt
+ * then tree_fix is called to ensure the tree complies with an rbt.
+ *
+ * @param T The tree we are inserting a word into.
+ * @param key The string we wish to place in the tree.
+ *
+ * @return T the newly updated tree.
+ */
 tree tree_insert(tree T, char *key) {
     if (T == NULL) {
         T = emalloc(sizeof * T);

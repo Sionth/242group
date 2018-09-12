@@ -1,3 +1,11 @@
+/**
+ * Header file for binary tree implementation.
+ * 13/9/18.
+ * @author Kelson Sadlier
+ * @author Quinn Thorsnes
+ * @author Callan Taylor
+ *
+ */
 #ifndef TREE_H_
 #define TREE_H_
 
