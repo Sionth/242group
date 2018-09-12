@@ -8,7 +8,6 @@
 #include <ctype.h>
 
 
-
 double fill_time;
 double search_time;
 int unknown_words;
@@ -72,11 +71,26 @@ int get_word(char *s, int limit, FILE *stream){
  */
 void print_help(int option) {
     if (option == 1) {
-        fprintf(stderr, "Need to write new help message\n");
+        fprintf(stderr,"Usage: ./asgn [OPTIONS]... <STDIN> \n\n\
+Perform tasks using a hash table or binary tree. By defualt, words\n\
+read from stdin are added to the data structure before printing\n\
+them, along with thier frequencies, to stdout.\n\n\
+ -T \t      Uses a tree data structure (default is hash table)\n\
+ -c FILENAME  Check spelling of words in FILENAME using words\n\
+              from stdin as dictionary. Print unknown words to\n\
+              stdout, timing info ect to stderr (ignore -o & -p)");
+        fprintf(stderr, "\n\
+ -d \t      Use double hahsing (linear probing is defualt)\n\
+ -e \t      Display entire contents of hash table on stderr\n\
+ -o \t      Output the tree in DOT form to file 'tree-view.dot'\n\
+ -p \t      Print hash table stats instead of frequencies & words\n\
+ -r \t      Make the tree an RBT (defualt is BST)\n\
+ -s SNAPSHOTS Show SNAPSHOTS stats snapshots (if -p is used)\n\
+ -t TABLESIZE Use the first prime >= TABLESIZE as htable size\n\n\
+ -h \t      Display this message\n\n");
         exit(EXIT_SUCCESS);
     }
 }
-
 
 
 /* Determines if the number supplied is a prime number.
@@ -203,7 +217,7 @@ void search_tree(tree t, FILE *stream) {
  */
 void print_basic_stats() {
     fprintf(stderr,
-            "Fill time :\t%f\nSearch time :\t%f\nUnknown words : %d\n",
+            "Fill time     : %f\nSearch time   : %f\nUnknown words = %d\n",
             fill_time, search_time,unknown_words);
    
 }

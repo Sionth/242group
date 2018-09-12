@@ -105,6 +105,17 @@ void htable_free(htable h){
 }
 
 
+
+void htable_print(htable h, void f(int freq, char *key)) {
+    int i;
+    for (i = 0; i < h->capacity; i++) {
+        if (h->freq[i] > 0) {
+            f(h->freq[i], h->keys[i]);
+        }
+    }
+}
+
+
 /*
 * Inserts a word into the hashtable.
 * Note: This method will use either Linear Probing or

@@ -152,11 +152,12 @@ void tree_inorder(tree T, void f(char *key)) {
 
 
 
-void tree_preorder(tree T, void f(char *key)){
+
+void tree_preorder(tree T, void f(int frequency, char *key)){
     if(T == NULL) {
         return;
     }
-    f(T->key);
+    f(T->frequency, T->key);
     tree_preorder(T->left, f);
     tree_preorder(T->right, f);
 }

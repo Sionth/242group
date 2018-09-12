@@ -7,12 +7,17 @@
 #include "htable.h"
 
 
+static void print_info(int freq, char *word) {
+    printf("%-4d %s\n", freq, word);
+}
+
+
 int main(int argc, char **argv) {
 
     FILE *document;
     FILE *tree_view;
     char *document_name = NULL;
-    int table_size = 113; /* Default size of hashtable */
+    int table_size = 113;
     const char *optstring = "Tc:deoprs:t:h";
     char option;
     int snaphots = 0;
@@ -20,19 +25,18 @@ int main(int argc, char **argv) {
     tree t;
     
     /* Command Line Flags */
-    unsigned int data_stucture = 0; /* default is hash table */
-    unsigned int collision_strategy = 0; /* default is LINEAR_P */
+    unsigned int data_stucture = 0;
+    unsigned int collision_strategy = 0; 
     unsigned int display_entire_contents = 0;
     unsigned int output_tree_representation = 0;
     unsigned int print_stats_info = 0;
     unsigned int spell_check = 0;
     unsigned int use_snapshots = 0;
-    unsigned int tree_type = 0; /* default is bst */
+    unsigned int tree_type = 0; 
     unsigned int help = 0;
 
-    tree_view = fopen("tree_view.dot", "w");
 
-    if (argc > 1) {
+    if (argc > 0) {
         while ((option = getopt(argc, argv, optstring)) != EOF) {
             switch (option) {
                 case 'T' :
@@ -73,17 +77,12 @@ int main(int argc, char **argv) {
         }                                                     
    
 
-    
-
-
         print_help(help);
         if (spell_check) {
             document = open_file(document_name);
         }
     
-        /* Tree */
         if (data_stucture) {
-            /* Process tree arguments */
             if (tree_type) {
                 t = tree_new(RBT);
             } else {;
@@ -91,13 +90,18 @@ int main(int argc, char **argv) {
             }
             t = insert_words_into_tree(t, stdin);
             t = tree_fix_root(t);
+            if (spell_check == 0) {
+                tree_preorder(t, print_info);
+            }
             if (spell_check) {
                 search_tree(t, document);
                 print_basic_stats();
             }
             /* When -c is given the -p and -o options should be ignored */
-            if (output_tree_representation && spell_check == 0) {;
+            if (output_tree_representation && spell_check == 0) {
+                tree_view = fopen("tree_view.dot", "w");
                 tree_output_dot(t, tree_view);
+                fclose(tree_view);
             }
             tree_free(t);
         } else {
@@ -108,9 +112,11 @@ int main(int argc, char **argv) {
             } else {
                 h = htable_new(table_size, LINEAR_P);
             }
-            insert_words_into_htable(h, stdin);
-
             
+            insert_words_into_htable(h, stdin);
+            if (spell_check == 0) {
+                htable_print(h, print_info);
+            }
             
             if (display_entire_contents) {
                 htable_print_entire_table(h, stderr);
@@ -131,8 +137,6 @@ int main(int argc, char **argv) {
         if (spell_check) {
             fclose(document);
         }
-    } else {
-        print_help(1);
     }
     return EXIT_SUCCESS;
 }

@@ -7,6 +7,7 @@
 #include "tree.h"
 #include <stdio.h>
 
+
 extern void   *emalloc(size_t s);
 extern void   *erealloc(void *p, size_t s);
 extern void   print_help(int option);
