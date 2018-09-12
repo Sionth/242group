@@ -152,15 +152,16 @@ void insert_words_into_htable(htable h, FILE *infile) {
  * Parameter: t is the tree to use.
  * Parameter: infile is the file to read from.
  */
-void insert_words_into_tree(tree t, FILE *stream) {
+tree insert_words_into_tree(tree t, FILE *stream) {
     clock_t start, end;
     char word[256];
     start = clock();
     while (get_word(word, sizeof word, stream) != EOF) {
-        tree_insert(t, word);
+        t = tree_insert(t, word);
     }
     end = clock();
     fill_time = (end - start) / (double)CLOCKS_PER_SEC;
+    return t;
 }
 
 

@@ -84,10 +84,10 @@ int main(int argc, char **argv) {
             /* Process tree arguments */
             if (tree_type) {
                 t = tree_new(RBT);
-            } else {
+            } else {;
                 t = tree_new(BST);
             }
-            insert_words_into_tree(t, stdin);
+            t = insert_words_into_tree(t, stdin);
             if (spell_check) {
                 search_tree(t, document);
             }
@@ -104,6 +104,9 @@ int main(int argc, char **argv) {
                 h = htable_new(table_size, LINEAR_P);
             }
             insert_words_into_htable(h, stdin);
+
+            
+            
             if (display_entire_contents) {
                 htable_print_entire_table(h, stderr);
             }

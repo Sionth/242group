@@ -103,7 +103,7 @@ static tree tree_fix(tree T) {
 
 
 tree tree_insert(tree T, char *key) {
-    if(T == NULL) {
+    if (T == NULL) {
         T = emalloc(sizeof * T);
         T->left = NULL;
         T->right = NULL;
@@ -112,13 +112,12 @@ tree tree_insert(tree T, char *key) {
         if (tree_type == RBT) {
             T->colour = RED;
         }
-        return T;  
-    } else if(strcmp(T->key, key) < 0) {
+    } else if (strcmp(T->key, key) < 0) {
         T->right = tree_insert(T->right, key);
     } else if (strcmp(T->key, key) > 0) {
         T->left = tree_insert(T->left, key);
     } else {
-        T -> frequency++;
+        T->frequency++;
     }
     if (tree_type == RBT) {
         T = tree_fix(T);
