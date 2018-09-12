@@ -4,18 +4,33 @@
 #include "htable.h"
 #include "mylib.h"
 
+/*
+* Function checks what collision resoloution method
+* is being used for the given hash table.
+* Function returns 1 if double hash is used and 0 otherwise.
+*
+* @param x The given hash table.
+*/
 #define IS_DHASH(x) (DOUBLE_H == (x)->method)
 
+/*
+ * Hashtable struct used as the blueprint to create the hash table.
+ */
 struct htablerec {
-  int capacity;
-  int num_keys;
-  int *freq;
-  int *stats;
+  int capacity; /* Capacity of table. */
+  int num_keys; /*Keys currently in the table. */
+  int *freq;  /*Frequency of a key. */
+  int *stats; /*Stats to record build information about the table. */
   char **keys;
   hashing_t method;
 };
 
-
+/*
+ * Converts a word into an integer.
+ *
+ * @param word The word to convert.
+ * @return result The integer resulting from the word.
+ */
 static unsigned int htable_word_to_int(char *word){
   unsigned int result = 0;
   while(*word != '\0'){
@@ -25,15 +40,36 @@ static unsigned int htable_word_to_int(char *word){
 }
 
 
-
+/*
+ * Computes the step size to be used based on the collision
+ * resoloution method for the given hashtable.
+ *
+ * @param h The hash table.
+ * @param i_key The key in integer form.
+ *
+ * @return Returns 1 if linear probing is used or if the table
+ * capacity is 1. Otherwise returns a step size based on the key value
+ * and tables capacity.
+ */
 static unsigned int htable_step(htable h, unsigned int i_key) {
     if(!IS_DHASH(h) || h->capacity == 1){
       return 1;
     }else{
+      /* Secondary hash function */
       return 1 + (i_key % (h->capacity - 1));
     }
 }
 
+/*
+ * Creates a new - empty - hashtable.
+ * Allocates the neccesary amount of memory for the table itself,
+ * and memory for each of the tables field.
+ *
+ * @param capacity The tables maximum capacity.
+ * @param s The collision resoloution method to be used for the table.
+ *
+ * @return h The hash table.
+ */
 htable htable_new(int capacity, hashing_t s){
   int i = 0;
   htable h = emalloc(sizeof * h);
@@ -51,6 +87,12 @@ htable htable_new(int capacity, hashing_t s){
   return h;
 }
 
+/*
+* Frees the memory which was allocated to the hash table and its
+* associated fields; stats, freq & keys.
+*
+* @param h The hash table.
+*/
 void htable_free(htable h){
   int i = 0;
   for(i=0;i<h->capacity;i++){
@@ -63,10 +105,22 @@ void htable_free(htable h){
 }
 
 
-
+/*
+* Inserts a word into the hashtable.
+* Note: This method will use either Linear Probing or
+* Double hashing as a collision resoloution strategy depending
+* on what is specified for the given hash table.
+*
+* @param h The hash table.
+* @param str The word to be inserted.
+*
+* @return Returns 1 if the word is inserted into an empty space
+* in the table, or returns the frequency of the word if it is already been
+* inserted into the table, and 0 if the word fails to be inserted.
+*/
 int htable_insert(htable h, char *str) {
     unsigned int word_value = htable_word_to_int(str);
-    unsigned int index = word_value % h->capacity; 
+    unsigned int index = word_value % h->capacity;
     int collisions = 0;
     unsigned int step;
 
@@ -97,9 +151,17 @@ int htable_insert(htable h, char *str) {
   }
 }
 
-
-
-
+/*
+* Prints out the entire hash table including information about each position.
+*
+* @li Pos - The position in the table.
+* @li Freq - The frequency of the word.
+* @li Stats - The number of collisions that occured at this position.
+* @li Word - The word (key) stored at this position.
+*
+* @param h The hash table.
+* @param stream The stream to print the table out to.
+*/
 void htable_print_entire_table(htable h, FILE *stream){
   int i;
   fprintf(stream, "%5s %5s %5s   %s\n", "Pos", "Freq", "Stats", "Word");
@@ -113,10 +175,14 @@ void htable_print_entire_table(htable h, FILE *stream){
   }
 }
 
-
-
-
-
+/*
+ * Searches for a particular word in the hash table.
+ *
+ * @param h The hash table.
+ * @param The word to search for.
+ *
+ * @return Returns the frequency of the word or returns 0 if not found.
+ */
 int htable_search(htable h, char *str){
   int collisions = 0;
   unsigned int word_value = htable_word_to_int(str);
@@ -130,8 +196,8 @@ int htable_search(htable h, char *str){
   }
 
   while (collisions < h->capacity) {
-      if (h->keys[index] == NULL) {
-          return 0;
+    if (h->keys[index] == NULL) {
+        return 0;
     } else if (strcmp(h->keys[index],str) == 0) {
       return h->freq[index];
     }
@@ -142,16 +208,6 @@ int htable_search(htable h, char *str){
 
   return 0;
 }
-
-
-
-
-
-
-/* Supplied Code*/
-
-
-
 
 /**
  * Prints out a line of data from the hash table to reflect the state
