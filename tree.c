@@ -107,6 +107,7 @@ tree tree_insert(tree T, char *key) {
         T = emalloc(sizeof * T);
         T->left = NULL;
         T->right = NULL;
+        T->frequency = 1;
         T->key = emalloc((strlen(key) + 1) * sizeof(T->key));
         strcpy(T->key, key);
         if (tree_type == RBT) {

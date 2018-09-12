@@ -1,0 +1,18 @@
+digraph tree {
+node [shape = Mrecord, penwidth = 2];
+"these"[label="{<f0>these:1|{<f1>|<f2>}}"color=black];
+"are"[label="{<f0>are:1|{<f1>|<f2>}}"color=red];
+"all"[label="{<f0>all:1|{<f1>|<f2>}}"color=black];
+"are":f1 -> "all":f0;
+"lovely"[label="{<f0>lovely:1|{<f1>|<f2>}}"color=black];
+"cant"[label="{<f0>cant:1|{<f1>|<f2>}}"color=red];
+"lovely":f1 -> "cant":f0;
+"tell"[label="{<f0>tell:1|{<f1>|<f2>}}"color=red];
+"lovely":f2 -> "tell":f0;
+"are":f2 -> "lovely":f0;
+"these":f1 -> "are":f0;
+"words"[label="{<f0>words:1|{<f1>|<f2>}}"color=black];
+"you"[label="{<f0>you:1|{<f1>|<f2>}}"color=red];
+"words":f2 -> "you":f0;
+"these":f2 -> "words":f0;
+}

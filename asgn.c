@@ -10,6 +10,7 @@
 int main(int argc, char **argv) {
 
     FILE *document;
+    FILE *tree_view;
     char *document_name = NULL;
     int table_size = 113; /* Default size of hashtable */
     const char *optstring = "Tc:deoprs:t:h";
@@ -29,6 +30,7 @@ int main(int argc, char **argv) {
     unsigned int tree_type = 0; /* default is bst */
     unsigned int help = 0;
 
+    tree_view = fopen("tree_view.dot", "w");
 
     if (argc > 1) {
         while ((option = getopt(argc, argv, optstring)) != EOF) {
@@ -88,13 +90,14 @@ int main(int argc, char **argv) {
                 t = tree_new(BST);
             }
             t = insert_words_into_tree(t, stdin);
+            t = tree_fix_root(t);
             if (spell_check) {
                 search_tree(t, document);
                 print_basic_stats();
             }
             /* When -c is given the -p and -o options should be ignored */
-            if (output_tree_representation && spell_check == 0) {
-                tree_output_dot(t, stdout);
+            if (output_tree_representation && spell_check == 0) {;
+                tree_output_dot(t, tree_view);
             }
             tree_free(t);
         } else {
