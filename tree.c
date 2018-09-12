@@ -54,7 +54,6 @@ static tree left_rotate(tree T) {
 
 
 static tree tree_fix(tree T) {
-    /* use lab book style as it is less indented in code than lecture slides */
     if (IS_RED(T -> left) && IS_RED(T -> left -> left)) {
         if (IS_RED(T -> right)) {
             T -> colour = RED;
@@ -102,6 +101,7 @@ static tree tree_fix(tree T) {
 }
 
 
+
 tree tree_insert(tree T, char *key) {
     if (T == NULL) {
         T = emalloc(sizeof * T);
@@ -121,7 +121,7 @@ tree tree_insert(tree T, char *key) {
     }
     if (tree_type == RBT) {
         T = tree_fix(T);
-    }
+     }
     return T;
 }
 
@@ -141,12 +141,12 @@ int tree_search(tree T, char *key) {
 
 
 void tree_inorder(tree T, void f(char *key)) {
-    if(T == NULL) { /*stopping case */
+    if(T == NULL) {
         return;
     }
-    tree_inorder(T->left, f); /* not sure about this line */
+    tree_inorder(T->left, f);
     f(T->key);
-    tree_inorder(T->right, f); /* or this one */   
+    tree_inorder(T->right, f); 
 }
 
 
@@ -163,17 +163,21 @@ void tree_preorder(tree T, void f(char *key)){
         
 tree tree_fix_root(tree T) {
     if(IS_RED(T)) {
-        T -> colour = BLACK;
+        T->colour = BLACK;
     }
     return T;
 }
 
  
-void tree_free(tree T) {
-    tree_free(T -> left);
-    tree_free(T -> right);
+tree tree_free(tree T) {
+    if (T == NULL) {
+        return T;
+    }
+    tree_free(T->left);
+    tree_free(T->right);
     free(T -> key);
     free(T);
+    return T;
 }
 
 

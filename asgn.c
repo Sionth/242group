@@ -90,11 +90,13 @@ int main(int argc, char **argv) {
             t = insert_words_into_tree(t, stdin);
             if (spell_check) {
                 search_tree(t, document);
+                print_basic_stats();
             }
             /* When -c is given the -p and -o options should be ignored */
             if (output_tree_representation && spell_check == 0) {
                 tree_output_dot(t, stdout);
             }
+            tree_free(t);
         } else {
             /* Process hash table arguments */
             table_size = get_next_prime(table_size);
@@ -112,14 +114,19 @@ int main(int argc, char **argv) {
             }
             if (spell_check) {
                 search_htable(h, document);
+                print_basic_stats();
             }
 
             /* When -c is given the -p and -o options should be ignored */
             if (spell_check == 0) {
                 if (print_stats_info && use_snapshots) {
-                    htable_print_stats(h, stderr, snaphots);
+                    htable_print_stats(h, stdout, snaphots);
                 }
-            }   
+            }
+            htable_free(h);
+        }
+        if (spell_check) {
+            fclose(document);
         }
     } else {
         print_help(1);

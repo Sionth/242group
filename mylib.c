@@ -72,11 +72,7 @@ int get_word(char *s, int limit, FILE *stream){
  */
 void print_help(int option) {
     if (option == 1) {
-        fprintf(stderr, "How to use program: \n\
--T: \t Use a tree data structure (the default is a hash table). \n\
--c filename: \t Check the spelling of words in 'filename' using dictionary read from stdin. \n\
--d: \t If using a tree data structure, use double hashing as collision resolution strategy (linear probing is the defualt). \n\
--e: \t print entire contents of hash table to stderr. \n");
+        fprintf(stderr, "Need to write new help message\n");
         exit(EXIT_SUCCESS);
     }
 }
@@ -202,14 +198,12 @@ void search_tree(tree t, FILE *stream) {
 
 
 /**
- *Prints the time taken to search and fill the data structure and how many
+ * Prints the time taken to search and fill the data structure and how many
  * words were not found in the dictionary.
- * Parameter: print_option is set to 1 if the user wants to see basic stats.
  */
-void print_basic_stats(int print_option) {
-    if (print_option == 1) {
-        fprintf(stderr,
-                "Fill time :\t%f\nSearch time :\t%f\nUnknown words : %d\n",
-                fill_time, search_time,unknown_words);
-    }
+void print_basic_stats() {
+    fprintf(stderr,
+            "Fill time :\t%f\nSearch time :\t%f\nUnknown words : %d\n",
+            fill_time, search_time,unknown_words);
+   
 }

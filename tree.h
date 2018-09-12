@@ -12,7 +12,7 @@ extern tree     tree_insert(tree T, char *key);
 extern int      tree_search(tree T, char *key);
 extern void     tree_inorder(tree T, void f(char *key));
 extern void     tree_preorder(tree T, void f(char *key));
-extern void     tree_free(tree T);
+extern tree     tree_free(tree T);
 extern void     tree_print(char *key);
 extern void     tree_output_dot(tree t, FILE *out);
 
