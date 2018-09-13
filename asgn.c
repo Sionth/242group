@@ -96,8 +96,11 @@ int main(int argc, char **argv) {
                     break;
             }
         }                                                     
-   
+
+        /* If help is rrequested or a invalid command line argument is used */
         print_help(help);
+
+        /* Open document file */
         if (spell_check) {
             document = open_file(document_name);
         }
