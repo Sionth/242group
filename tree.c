@@ -30,7 +30,6 @@ typedef enum { RED, BLACK } tree_colour;
  */
 static tree_t tree_type;
 
-
 /**
  * tree_node struct is the blueprint for creating an instance of a binary tree.
  */
@@ -44,17 +43,18 @@ struct tree_node {
 
 
 /**
- * Creates a new binary tree of the specified type
+ * Creates a new tree of the specified type.
  *
- * @param type The type of tree desired
- *             RBT for Red/Black Tree
- *             BST for Binary Search Tree
+ * @param type The type of tree desired:
+ *             RBT for Red/Black Tree and
+ *             BST for Binary Search Tree.
+ *
+ * @return tree A new tree
  */
 tree tree_new(tree_t type) {
     tree_type = type;
     return NULL;
 }
-
 
 /**
  * Performs a right rotation of the nodes at a particular position in an rbt.
@@ -71,7 +71,6 @@ static tree right_rotate(tree T) {
     return T;
 }
 
-
 /**
  * Performs a left rotation of the nodes at a particular position in an rbt.
  *
@@ -87,7 +86,6 @@ static tree left_rotate(tree T) {
     return T;
 }
 
-
 /**
  * Called after each insertion into an rbt, tree_fix updates the colours and
  * performs necessary rotaion to ensure the tree complies with the
@@ -95,7 +93,7 @@ static tree left_rotate(tree T) {
  *
  * @param T A node in an rbt.
  *
- * @return T The updates node in the rbt.
+ * @return T the updated node in the rbt.
  */
 static tree tree_fix(tree T) {
     if (IS_RED(T->left) && IS_RED(T->left->left)) {
@@ -179,14 +177,14 @@ tree tree_insert(tree T, char *key) {
     return T;
 }
 
-
 /**
- * Recursive function for finding a particular key within the binary tree.
+ * Searches the specified tree for a given value.
+ * Returns 1 if the value was found, 0 if not.
  *
  * @param T The tree to search.
  * @param key The string to search for.
  *
- * @return 1 if the string was found and 0 if not.
+ * @return int 1 if the string was found and 0 if not.
  */
 int tree_search(tree T, char *key) {
     if (T == NULL) { /* key not found */
@@ -195,29 +193,41 @@ int tree_search(tree T, char *key) {
         return 1; 
     } else if (strcmp(T->key, key) > 0) { /* key comes before current */
         return tree_search(T->left, key);
-    } else  if (strcmp(T->key, key) < 0) { /*key comes after current */
+    } else  if (strcmp(T->key, key) < 0) { /* key comes after current */
         return tree_search(T->right, key);
     }
     return 1;
 }
 
-
 /**
- * Recursively goes through a binary tree applying a given function f to
- * each node.
+ * Executes a function on each node of the tree in order.
  *
- * @param T The tree to apply the function too.
- * @param f the function to apply to each node.
+ * @param T The tree on which to execute the function.
+ * @param f(char *key) The function to be executed.
  */
-void tree_preorder(tree T, void f(int frequency, char *key)){
+void tree_inorder(tree T, void f(char *key)) {
     if(T == NULL) {
         return;
     }
-    f(T->frequency, T->key);
+    tree_inorder(T->left, f);
+    f(T->key);
+    tree_inorder(T->right, f); 
+}
+
+/**
+ * Executes a function on each node of the tree in prefix order.
+ *
+ * @param T The tree on which to execute the function.
+ * @param f(char *key) The function to be executed.
+ */
+void tree_preorder(tree T, void f(char *key)) {
+    if(T == NULL) {
+        return;
+    }
+    f(T->key);
     tree_preorder(T->left, f);
     tree_preorder(T->right, f);
 }
-
 
 /**
  * Ensures the tree satisfies the 'root is always black' requirment of a rbt.
@@ -232,7 +242,6 @@ tree tree_fix_root(tree T) {
     }
     return T;
 }
-
 
 /**
  * Frees all memory assosiated with a particular binary tree but recursively
