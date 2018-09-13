@@ -98,28 +98,28 @@ static tree left_rotate(tree T) {
  * @return T the updates node in the rbt.
  */
 static tree tree_fix(tree T) {
-    if (IS_RED(T -> left) && IS_RED(T -> left -> left)) {
-        if (IS_RED(T -> right)) {
-            T -> colour = RED;
-            T -> left -> colour = BLACK;
-            T -> right -> colour = BLACK;
+    if (IS_RED(T->left) && IS_RED(T->left->left)) {
+        if (IS_RED(T->right)) {
+            T->colour = RED;
+            T->left->colour = BLACK;
+            T->right->colour = BLACK;
         } else {
             T = right_rotate(T);
-            T -> colour = BLACK;
-            T -> right -> colour = RED;
+            T->colour = BLACK;
+            T->right->colour = RED;
         }
-    } else if (IS_RED(T -> left) && IS_RED(T -> left -> right)) {
-        if (IS_RED(T -> right)) {
-            T -> colour = RED;
-            T -> left -> colour = BLACK;
-            T -> right -> colour = BLACK;
+    } else if (IS_RED(T->left) && IS_RED(T->left->right)) {
+        if (IS_RED(T->right)) {
+            T->colour = RED;
+            T->left->colour = BLACK;
+            T->right->colour = BLACK;
         } else {
-            T -> left = left_rotate(T -> left);
+            T->left = left_rotate(T->left);
             T = right_rotate(T);
-            T -> colour = BLACK;
-            T -> right -> colour = RED;
+            T->colour = BLACK;
+            T->right->colour = RED;
         }
-    } else if (IS_RED(T->right) && IS_RED(T -> right -> left)) {
+    } else if (IS_RED(T->right) && IS_RED(T->right->left)) {
         if (IS_RED(T->left)) {
             T->colour = RED;
             T->left->colour = BLACK;
@@ -130,8 +130,8 @@ static tree tree_fix(tree T) {
             T->colour = BLACK;
             T->left->colour = RED;
         }
-    } else if (IS_RED(T -> right) && IS_RED(T -> right -> right)) {
-        if (IS_RED(T -> left)) {
+    } else if (IS_RED(T->right) && IS_RED(T->right->right)) {
+        if (IS_RED(T->left)) {
             T->colour = RED;
             T->left->colour = BLACK;
             T->right->colour = BLACK;
@@ -179,6 +179,15 @@ tree tree_insert(tree T, char *key) {
     return T;
 }
 
+
+/**
+ * Recursive function for finding a particular key within the binary tree.
+ *
+ * @param T The tree to search.
+ * @param key The string to search for.
+ *
+ * @return 1 if the string was found and 0 if not.
+ */
 int tree_search(tree T, char *key) {
     if (T == NULL) { /* key not found */
         return 0; 
@@ -193,19 +202,13 @@ int tree_search(tree T, char *key) {
 }
 
 
-
-void tree_inorder(tree T, void f(char *key)) {
-    if(T == NULL) {
-        return;
-    }
-    tree_inorder(T->left, f);
-    f(T->key);
-    tree_inorder(T->right, f); 
-}
-
-
-
-
+/**
+ * Recursively goes through a binary tree applying a given function f to
+ * each node.
+ *
+ * @param T The tree to apply the function too.
+ * @param f the function to apply to each node.
+ */
 void tree_preorder(tree T, void f(int frequency, char *key)){
     if(T == NULL) {
         return;
@@ -215,7 +218,14 @@ void tree_preorder(tree T, void f(int frequency, char *key)){
     tree_preorder(T->right, f);
 }
 
-        
+
+/**
+ * Ensures the tree satisfies the 'root is always black' requirment of a rbt.
+ *
+ * @param T the tree to fix.
+ *
+ * @return the updated tree.
+ */
 tree tree_fix_root(tree T) {
     if(IS_RED(T)) {
         T->colour = BLACK;
@@ -223,14 +233,22 @@ tree tree_fix_root(tree T) {
     return T;
 }
 
- 
+
+/**
+ * Frees all memory assosiated with a particular binary tree but recursively
+ * decending through the data structure similar to a post-order-traversal.
+ *
+ * @param T the tree we wish to deallocate memory for.
+ *
+ * @return a pointer to our now empty tree.
+ */
 tree tree_free(tree T) {
     if (T == NULL) {
         return T;
     }
     tree_free(T->left);
     tree_free(T->right);
-    free(T -> key);
+    free(T->key);
     free(T);
     return T;
 }
@@ -258,8 +276,6 @@ static void tree_output_dot_aux(tree t, FILE *out) {
         fprintf(out, "\"%s\":f2 -> \"%s\":f0;\n", t->key, t->right->key);
     }
 }
-
-
 
 
 /**
