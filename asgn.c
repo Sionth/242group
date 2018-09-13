@@ -101,54 +101,73 @@ int main(int argc, char **argv) {
         if (spell_check) {
             document = open_file(document_name);
         }
-    
+
+        /* If data structure is tree */
         if (data_stucture) {
             if (tree_type) {
                 t = tree_new(RBT);
             } else {;
                 t = tree_new(BST);
             }
+
+            /* Insert words from stdin */
             t = insert_words_into_tree(t, stdin);
-            t = tree_fix_root(t);
+
+            /* If tree is rbt fix root */
+            if (tree_type) {
+                t = tree_fix_root(t);
+            }
+
+            /* If no document file was provided, just print out dictionary */
             if (spell_check == 0) {
                 tree_preorder(t, print_info);
+                if (output_tree_representation) {
+                    tree_view = fopen("tree_view.dot", "w");
+                    tree_output_dot(t, tree_view);
+                    fclose(tree_view);
+                }
             } else {
+                /* Document to spell check is provided, check spelling */
                 search_tree(t, document);
                 print_basic_stats();
             }
-            if (output_tree_representation && spell_check == 0) {
-                tree_view = fopen("tree_view.dot", "w");
-                tree_output_dot(t, tree_view);
-                fclose(tree_view);
-            }
+            
+            /* Free tree memory */
             tree_free(t);
+            
         } else {
+            /* If data structure is hash table */
             table_size = get_next_prime(table_size);
+            
             if (collision_strategy) {
                 h = htable_new(table_size, DOUBLE_H);
             } else {
                 h = htable_new(table_size, LINEAR_P);
             }
-            
+
+            /* Insert words from stdin */
             insert_words_into_htable(h, stdin);
-            if (spell_check == 0) {
-                htable_print(h, print_info);
-            }
-            
             if (display_entire_contents) {
                 htable_print_entire_table(h, stderr);
             }
-            if (spell_check) {
-                search_htable(h, document);
-                print_basic_stats();
-            }
+
+            /* If no document is provided, print out dictionary */
             if (spell_check == 0) {
+                htable_print(h, print_info);
+                
+                /* If user wants snapshot stats */
                 if (print_stats_info && use_snapshots) {
                     htable_print_stats(h, stdout, snaphots);
                 }
+            } else {
+                /* Document to spell check is provided, check spelling */ 
+                search_htable(h, document);
+                print_basic_stats();
             }
+            /* Free hash table memory */
             htable_free(h);
         }
+        /* Close the docuemnt file */
         if (spell_check) {
             fclose(document);
         }
