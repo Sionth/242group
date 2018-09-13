@@ -1,3 +1,11 @@
+/**
+ * Header file for helper functions used in program.
+ * 13/9/18.
+ * @author Kelson Sadlier
+ * @author Quinn Thorsnes
+ * @author Callan Taylor
+ *
+ */
 #ifndef MYLIB_H_
 #define MYLIB_H_
 
@@ -6,6 +14,7 @@
 #include "htable.h"
 #include "tree.h"
 #include <stdio.h>
+
 
 extern void   *emalloc(size_t s);
 extern void   *erealloc(void *p, size_t s);

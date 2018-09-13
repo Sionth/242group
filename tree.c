@@ -1,17 +1,38 @@
+/**
+ * A modular implementation of a binary tree data structure.
+ * 13/09/18.
+ * @author Kelson Sadlier
+ * @author Quinn Thorsnes
+ * @author Callan Taylor
+ *
+ */
 #include <stdlib.h>
 #include "tree.h"
 #include "mylib.h"
 #include <string.h>
 #include <stdio.h>
 
+
+/**
+ * Macros for checking the 'colour' field of a rbt node.
+ *
+ * @param x The given node.
+ */
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
 
+
 typedef enum { RED, BLACK } tree_colour;
 
+
+/**
+ * Data field to hold the type of binary tree being used. Either an rbt or bst.
+ */
 static tree_t tree_type;
 
-/* Struct defining tree_node object. */
+/**
+ * tree_node struct is the blueprint for creating an instance of a binary tree.
+ */
 struct tree_node {
     char *key;
     tree left;
@@ -19,6 +40,7 @@ struct tree_node {
     int frequency;
     tree_colour colour;
 };
+
 
 /**
  * Creates a new tree of the specified type.
@@ -35,11 +57,11 @@ tree tree_new(tree_t type) {
 }
 
 /**
- * Performs a right rotation on the (sub)tree passed.
+ * Performs a right rotation of the nodes at a particular position in an rbt.
  *
- * @param T the tree to be rotated right.
+ * @param T The node at which we wish the rotation to take place.
  *
- * @return tree The rotated tree.
+ * @return T the updated rbt.
  */
 static tree right_rotate(tree T) {
     tree temp = T;
@@ -50,11 +72,11 @@ static tree right_rotate(tree T) {
 }
 
 /**
- * Performs a left rotation on the (sub)tree passed.
- * 
- * @param T the tree to be rotated left.
+ * Performs a left rotation of the nodes at a particular position in an rbt.
  *
- * @return tree The rotated tree.
+ * @param T The node at which we wish the rotation to take place.
+ *
+ * @return T the updated rbt.
  */
 static tree left_rotate(tree T) {
     tree temp = T;
@@ -65,35 +87,37 @@ static tree left_rotate(tree T) {
 }
 
 /**
- * Fixes the (sub)tree passed to preserve its Red/Black properties.
+ * Called after each insertion into an rbt, tree_fix updates the colours and
+ * performs necessary rotaion to ensure the tree complies with the
+ * specifications of an rbt.
  *
- * @param T The tree to be checked for errors.
+ * @param T a node in an rbt.
  *
- * @return tree The fixed (sub)tree.
+ * @return T the updated node in the rbt.
  */
 static tree tree_fix(tree T) {
-    if (IS_RED(T -> left) && IS_RED(T -> left -> left)) {
-        if (IS_RED(T -> right)) {
-            T -> colour = RED;
-            T -> left -> colour = BLACK;
-            T -> right -> colour = BLACK;
+    if (IS_RED(T->left) && IS_RED(T->left->left)) {
+        if (IS_RED(T->right)) {
+            T->colour = RED;
+            T->left->colour = BLACK;
+            T->right->colour = BLACK;
         } else {
             T = right_rotate(T);
-            T -> colour = BLACK;
-            T -> right -> colour = RED;
+            T->colour = BLACK;
+            T->right->colour = RED;
         }
-    } else if (IS_RED(T -> left) && IS_RED(T -> left -> right)) {
-        if (IS_RED(T -> right)) {
-            T -> colour = RED;
-            T -> left -> colour = BLACK;
-            T -> right -> colour = BLACK;
+    } else if (IS_RED(T->left) && IS_RED(T->left->right)) {
+        if (IS_RED(T->right)) {
+            T->colour = RED;
+            T->left->colour = BLACK;
+            T->right->colour = BLACK;
         } else {
-            T -> left = left_rotate(T -> left);
+            T->left = left_rotate(T->left);
             T = right_rotate(T);
-            T -> colour = BLACK;
-            T -> right -> colour = RED;
+            T->colour = BLACK;
+            T->right->colour = RED;
         }
-    } else if (IS_RED(T->right) && IS_RED(T -> right -> left)) {
+    } else if (IS_RED(T->right) && IS_RED(T->right->left)) {
         if (IS_RED(T->left)) {
             T->colour = RED;
             T->left->colour = BLACK;
@@ -104,8 +128,8 @@ static tree tree_fix(tree T) {
             T->colour = BLACK;
             T->left->colour = RED;
         }
-    } else if (IS_RED(T -> right) && IS_RED(T -> right -> right)) {
-        if (IS_RED(T -> left)) {
+    } else if (IS_RED(T->right) && IS_RED(T->right->right)) {
+        if (IS_RED(T->left)) {
             T->colour = RED;
             T->left->colour = BLACK;
             T->right->colour = BLACK;
@@ -120,12 +144,14 @@ static tree tree_fix(tree T) {
 
 
 /**
- * Inserts a new value into the given tree at the correct location, then fixes if needed.
+ * Inserts a string into the data structure by creating and allocating a new
+ * node and copying the string into its key data field. If the tree is a rbt
+ * then tree_fix is called to ensure the tree complies with an rbt.
  *
- * @param T The tree into which to insert.
- * @param key A character array/string to be inserted.
+ * @param T The tree we are inserting a word into.
+ * @param key The string we wish to place in the tree.
  *
- * @return tree The resultant tree after the insertion.
+ * @return T the newly updated tree.
  */
 tree tree_insert(tree T, char *key) {
     if (T == NULL) {
@@ -156,9 +182,9 @@ tree tree_insert(tree T, char *key) {
  * Returns 1 if the value was found, 0 if not.
  *
  * @param T The tree to search.
- * @param key The value to search for.
+ * @param key The string to search for.
  *
- * @return int 1 if the key was found in the tree, 0 if not.
+ * @return int 1 if the string was found and 0 if not.
  */
 int tree_search(tree T, char *key) {
     if (T == NULL) { /* key not found */
@@ -194,7 +220,7 @@ void tree_inorder(tree T, void f(char *key)) {
  * @param T The tree on which to execute the function.
  * @param f(char *key) The function to be executed.
  */
-void tree_preorder(tree T, void f(char *key)){
+void tree_preorder(tree T, void f(char *key)) {
     if(T == NULL) {
         return;
     }
@@ -204,11 +230,11 @@ void tree_preorder(tree T, void f(char *key)){
 }
 
 /**
- * Ensures the root of the passed tree is black.
+ * Ensures the tree satisfies the 'root is always black' requirment of a rbt.
  *
- * @param T The tree whose root is to be fixed.
+ * @param T the tree to fix.
  *
- * @return tree The tree with a fixed root.
+ * @return the updated tree.
  */
 tree tree_fix_root(tree T) {
     if(IS_RED(T)) {
@@ -218,11 +244,12 @@ tree tree_fix_root(tree T) {
 }
 
 /**
- * Frees a tree and all its subtrees and keys from memory.
+ * Frees all memory assosiated with a particular binary tree but recursively
+ * decending through the data structure similar to a post-order-traversal.
  *
- * @param T The tree to be freed.
+ * @param T the tree we wish to deallocate memory for.
  *
- * @return An empty tree node (NULL pointer).
+ * @return a pointer to our now empty tree.
  */
 tree tree_free(tree T) {
     if (T == NULL) {
@@ -230,7 +257,7 @@ tree tree_free(tree T) {
     }
     tree_free(T->left);
     tree_free(T->right);
-    free(T -> key);
+    free(T->key);
     free(T);
     return T;
 }
@@ -258,8 +285,6 @@ static void tree_output_dot_aux(tree t, FILE *out) {
         fprintf(out, "\"%s\":f2 -> \"%s\":f0;\n", t->key, t->right->key);
     }
 }
-
-
 
 
 /**
