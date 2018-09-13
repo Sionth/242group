@@ -97,7 +97,6 @@ int main(int argc, char **argv) {
             }
         }                                                     
    
-
         print_help(help);
         if (spell_check) {
             document = open_file(document_name);
@@ -113,12 +112,10 @@ int main(int argc, char **argv) {
             t = tree_fix_root(t);
             if (spell_check == 0) {
                 tree_preorder(t, print_info);
-            }
-            if (spell_check) {
+            } else {
                 search_tree(t, document);
                 print_basic_stats();
             }
-            /* When -c is given the -p and -o options should be ignored */
             if (output_tree_representation && spell_check == 0) {
                 tree_view = fopen("tree_view.dot", "w");
                 tree_output_dot(t, tree_view);
@@ -126,7 +123,6 @@ int main(int argc, char **argv) {
             }
             tree_free(t);
         } else {
-            /* Process hash table arguments */
             table_size = get_next_prime(table_size);
             if (collision_strategy) {
                 h = htable_new(table_size, DOUBLE_H);
@@ -146,8 +142,6 @@ int main(int argc, char **argv) {
                 search_htable(h, document);
                 print_basic_stats();
             }
-
-            /* When -c is given the -p and -o options should be ignored */
             if (spell_check == 0) {
                 if (print_stats_info && use_snapshots) {
                     htable_print_stats(h, stdout, snaphots);
