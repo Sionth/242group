@@ -30,6 +30,7 @@ typedef enum { RED, BLACK } tree_colour;
  */
 static tree_t tree_type;
 
+
 /**
  * tree_node struct is the blueprint for creating an instance of a binary tree.
  */
@@ -56,6 +57,7 @@ tree tree_new(tree_t type) {
     return NULL;
 }
 
+
 /**
  * Performs a right rotation of the nodes at a particular position in an rbt.
  *
@@ -71,6 +73,7 @@ static tree right_rotate(tree T) {
     return T;
 }
 
+
 /**
  * Performs a left rotation of the nodes at a particular position in an rbt.
  *
@@ -85,6 +88,7 @@ static tree left_rotate(tree T) {
     T->left = temp;
     return T;
 }
+
 
 /**
  * Called after each insertion into an rbt, tree_fix updates the colours and
@@ -177,6 +181,7 @@ tree tree_insert(tree T, char *key) {
     return T;
 }
 
+
 /**
  * Searches the specified tree for a given value.
  * Returns 1 if the value was found, 0 if not.
@@ -199,20 +204,6 @@ int tree_search(tree T, char *key) {
     return 1;
 }
 
-/**
- * Executes a function on each node of the tree in order.
- *
- * @param T The tree on which to execute the function.
- * @param f(char *key) The function to be executed.
- */
-void tree_inorder(tree T, void f(char *key)) {
-    if(T == NULL) {
-        return;
-    }
-    tree_inorder(T->left, f);
-    f(T->key);
-    tree_inorder(T->right, f); 
-}
 
 /**
  * Executes a function on each node of the tree in prefix order.
@@ -220,14 +211,15 @@ void tree_inorder(tree T, void f(char *key)) {
  * @param T The tree on which to execute the function.
  * @param f(char *key) The function to be executed.
  */
-void tree_preorder(tree T, void f(char *key)) {
+void tree_preorder(tree T, void f(int freq, char *key)) {
     if(T == NULL) {
         return;
     }
-    f(T->key);
+    f(T->frequency, T->key);
     tree_preorder(T->left, f);
     tree_preorder(T->right, f);
 }
+
 
 /**
  * Ensures the tree satisfies the 'root is always black' requirment of a rbt.
@@ -242,6 +234,7 @@ tree tree_fix_root(tree T) {
     }
     return T;
 }
+
 
 /**
  * Frees all memory assosiated with a particular binary tree but recursively
