@@ -1,3 +1,11 @@
+/**
+ * Header file for helper functions used in program.
+ * 13/9/18.
+ * @author Kelson Sadlier
+ * @author Quinn Thorsnes
+ * @author Callan Taylor
+ *
+ */
 #ifndef MYLIB_H_
 #define MYLIB_H_
 

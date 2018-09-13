@@ -1,3 +1,11 @@
+/**
+ * Implementations of helper functions used in the program.
+ * 13/09/18.
+ * @author Kelson Sadlier
+ * @author Quinn Thorsnes
+ * @author Callan Taylor
+ *
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -13,10 +21,17 @@ double search_time;
 int unknown_words;
 
 
-
+/**
+ * Error checking memory allocation function ensures the all memory is
+ * allocated without issues. If error is detected an error message is printed
+ * and the program exits.
+ *
+ * @param s is the size of memory required for allocation.
+ *
+ * @return result A pointer to the position in memory allocated.
+ */
 void *emalloc(size_t s) {
     void *result = malloc(s);
-
     if (NULL == result) {
         fprintf(stderr, "memory allocation failed.\n");
         exit(EXIT_FAILURE);
@@ -25,19 +40,15 @@ void *emalloc(size_t s) {
 }
 
 
-
-void *erealloc(void *p, size_t s) {
-    void *result = realloc(p, s);
-
-    if (NULL == result) {
-        fprintf(stderr, "memory reallocation failed.\n");
-        exit(EXIT_FAILURE);
-    }
-    return result;
-}
-
-
-
+/**
+ * Gets a word from input for the reading of the dictionary and document files.
+ *
+ * @param s A pointer to the word to read.
+ * @param limit The number of letters.
+ * @param stream The input file.
+ *
+ * @return The number of characters left in the file.
+ */
 int get_word(char *s, int limit, FILE *stream){
   int c;
   char *w = s;
@@ -66,8 +77,11 @@ int get_word(char *s, int limit, FILE *stream){
 
 
 
-/* Prints out info on how to use each command line argument of asgn.c.
- * Parameter: option signals if user requires help info.
+/**
+ * Prints out info on the ussage of the program as a whole, including all of
+ * possible command line arguments.
+ *
+ * @param option Signals if user requires help info.
  */
 void print_help(int option) {
     if (option == 1) {
@@ -93,9 +107,12 @@ them, along with thier frequencies, to stdout.\n\n\
 }
 
 
-/* Determines if the number supplied is a prime number.
- * Parameter: c is the candidate number.
- * Returns: 1 if c is prime 0 if not.
+/**
+ * Determines if the number supplied is a prime number.
+ *
+ * @param c The candidate number.
+ *
+ * @return 1 if c is prime 0 if not.
  */
 int is_prime(int c) {
     int i, prime = 1;
@@ -109,9 +126,12 @@ int is_prime(int c) {
 
 
 
-/* Finds the next prime number greater or equal too the size parameter.
- * Parameter: size is the minimum size for a new hashtable.
- * Returns: the next prime number greater than or equal to size.
+/**
+ * Finds the next prime number greater or equal too the size parameter.
+ *
+ * @param size The minimum size for a new hashtable.
+ *
+ * @return the next prime number greater than or equal to size.
  */
 int get_next_prime(int size) {
     int candidate = size;
@@ -123,10 +143,12 @@ int get_next_prime(int size) {
 
 
 
-/* Opens a given file for reading.
- * Parameter: filename is the file to be opened.
- * Returns: the opened file.
- * EXITS if the file does not exist.
+/**
+ * Opens a given file for reading or exits if the file does not exist.
+ *
+ * @param filename The file to be opened.
+ *
+ * @return the opened file.
  */
 FILE *open_file(char *filename) {
     FILE *infile = NULL;
@@ -139,10 +161,12 @@ FILE *open_file(char *filename) {
 
 
 
-/* Inserts words from a specified file into the given hashtable and mesures the
+/**
+ * Inserts words from a specified file into the given hashtable and mesures the
  * time taken.
- * Parameter: h is the hash table to use.
- * Parameter: infile is the file to read from.
+ *
+ * @param h The hash table to use.
+ * @param infile The file to read from.
  */
 void insert_words_into_htable(htable h, FILE *infile) {
     clock_t start, end;
@@ -157,10 +181,12 @@ void insert_words_into_htable(htable h, FILE *infile) {
 
 
 
-/* Inserts words from a specified file into the given tree and mesures the
+/**
+ * Inserts words from a specified file into the given tree and mesures the
  * time taken.
- * Parameter: t is the tree to use.
- * Parameter: infile is the file to read from.
+ *
+ * @param t The tree to use.
+ * @param infile The file to read from.
  */
 tree insert_words_into_tree(tree t, FILE *stream) {
     clock_t start, end;
@@ -175,7 +201,14 @@ tree insert_words_into_tree(tree t, FILE *stream) {
 }
 
 
-
+/**
+ * Searches a hash table for all words in the input stream, if the words are not
+ * found then it increments the number of unknown words and prints that word
+ * to stdout. Mesures the time taken to find each word.
+ *
+ * @param h The hash table in which to seach for the words.
+ * @param stream The input stream containing all the words to look for.
+ */
 void search_htable(htable h, FILE *stream) {
     clock_t start, end;
     char word[256];
@@ -193,7 +226,14 @@ void search_htable(htable h, FILE *stream) {
 }
 
 
-
+/**
+ * Searches a binary tree for all words in the input stream, if the words
+ * are not found then it increments the number of unknown words and prints
+ * that word to stdout. Mesures the time taken to find each word.
+ *
+ * @param h The binary treee in which to seach for the words.
+ * @param stream The input stream containing all the words to look for.
+ */
 void search_tree(tree t, FILE *stream) {
     clock_t start, end;
     char word[256];

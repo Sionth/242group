@@ -1,3 +1,17 @@
+/**
+ * Reads in a text file and stores it in either a Hash Table, a Binary Search
+ * Tree, or a Red Black Tree. If nothing else is entered it simply returns the
+ * words and their frequencies. If a second file is specified then in searches
+ * for each word in the second file in the data structure. If words are not
+ * found then they are printed out, in this way it acts like a rudimentary
+ * spell checker.
+ *
+ * 13/09/18.
+ * @author Kelson Sadlier
+ * @author Quinn Thorsnes
+ * @author Callan Taylor
+ *
+ */
 #include <getopt.h>
 #include <string.h>
 #include <stdlib.h>
@@ -7,6 +21,12 @@
 #include "htable.h"
 
 
+/**
+ * Prints the words and their frequencies to stdout.
+ *
+ * @param freq The number of copies of the word.
+ * @param word The string itself.
+ */
 static void print_info(int freq, char *word) {
     printf("%-4d %s\n", freq, word);
 }
