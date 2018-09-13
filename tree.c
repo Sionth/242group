@@ -11,7 +11,7 @@ typedef enum { RED, BLACK } tree_colour;
 
 static tree_t tree_type;
 
-
+/* Struct defining tree_node object. */
 struct tree_node {
     char *key;
     tree left;
@@ -21,19 +21,26 @@ struct tree_node {
 };
 
 /**
- * creates a new tree of the specified type
+ * Creates a new tree of the specified type.
  *
- * @param type The type of tree desired
- *             RBT for Red/Black Tree
- *             BST for Binary Search Tree
+ * @param type The type of tree desired:
+ *             RBT for Red/Black Tree and
+ *             BST for Binary Search Tree.
+ *
+ * @return tree A new tree
  */
 tree tree_new(tree_t type) {
     tree_type = type;
     return NULL;
 }
 
-
-
+/**
+ * Performs a right rotation on the (sub)tree passed.
+ *
+ * @param T the tree to be rotated right.
+ *
+ * @return tree The rotated tree.
+ */
 static tree right_rotate(tree T) {
     tree temp = T;
     T = T->left;
@@ -42,7 +49,13 @@ static tree right_rotate(tree T) {
     return T;
 }
 
-
+/**
+ * Performs a left rotation on the (sub)tree passed.
+ * 
+ * @param T the tree to be rotated left.
+ *
+ * @return tree The rotated tree.
+ */
 static tree left_rotate(tree T) {
     tree temp = T;
     T = T->right;
@@ -51,8 +64,13 @@ static tree left_rotate(tree T) {
     return T;
 }
 
-
-
+/**
+ * Fixes the (sub)tree passed to preserve its Red/Black properties.
+ *
+ * @param T The tree to be checked for errors.
+ *
+ * @return tree The fixed (sub)tree.
+ */
 static tree tree_fix(tree T) {
     if (IS_RED(T -> left) && IS_RED(T -> left -> left)) {
         if (IS_RED(T -> right)) {
@@ -101,7 +119,14 @@ static tree tree_fix(tree T) {
 }
 
 
-
+/**
+ * Inserts a new value into the given tree at the correct location, then fixes if needed.
+ *
+ * @param T The tree into which to insert.
+ * @param key A character array/string to be inserted.
+ *
+ * @return tree The resultant tree after the insertion.
+ */
 tree tree_insert(tree T, char *key) {
     if (T == NULL) {
         T = emalloc(sizeof * T);
@@ -126,6 +151,15 @@ tree tree_insert(tree T, char *key) {
     return T;
 }
 
+/**
+ * Searches the specified tree for a given value.
+ * Returns 1 if the value was found, 0 if not.
+ *
+ * @param T The tree to search.
+ * @param key The value to search for.
+ *
+ * @return int 1 if the key was found in the tree, 0 if not.
+ */
 int tree_search(tree T, char *key) {
     if (T == NULL) { /* key not found */
         return 0; 
@@ -133,14 +167,18 @@ int tree_search(tree T, char *key) {
         return 1; 
     } else if (strcmp(T->key, key) > 0) { /* key comes before current */
         return tree_search(T->left, key);
-    } else  if (strcmp(T->key, key) < 0) { /*key comes after current */
+    } else  if (strcmp(T->key, key) < 0) { /* key comes after current */
         return tree_search(T->right, key);
     }
     return 1;
 }
 
-
-
+/**
+ * Executes a function on each node of the tree in order.
+ *
+ * @param T The tree on which to execute the function.
+ * @param f(char *key) The function to be executed.
+ */
 void tree_inorder(tree T, void f(char *key)) {
     if(T == NULL) {
         return;
@@ -150,8 +188,12 @@ void tree_inorder(tree T, void f(char *key)) {
     tree_inorder(T->right, f); 
 }
 
-
-
+/**
+ * Executes a function on each node of the tree in prefix order.
+ *
+ * @param T The tree on which to execute the function.
+ * @param f(char *key) The function to be executed.
+ */
 void tree_preorder(tree T, void f(char *key)){
     if(T == NULL) {
         return;
@@ -161,7 +203,13 @@ void tree_preorder(tree T, void f(char *key)){
     tree_preorder(T->right, f);
 }
 
-        
+/**
+ * Ensures the root of the passed tree is black.
+ *
+ * @param T The tree whose root is to be fixed.
+ *
+ * @return tree The tree with a fixed root.
+ */
 tree tree_fix_root(tree T) {
     if(IS_RED(T)) {
         T->colour = BLACK;
@@ -169,7 +217,13 @@ tree tree_fix_root(tree T) {
     return T;
 }
 
- 
+/**
+ * Frees a tree and all its subtrees and keys from memory.
+ *
+ * @param T The tree to be freed.
+ *
+ * @return An empty tree node (NULL pointer).
+ */
 tree tree_free(tree T) {
     if (T == NULL) {
         return T;
